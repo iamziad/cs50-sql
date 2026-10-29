@@ -1,0 +1,394 @@
+#+TITLE: CS50 - weak 0 source code
+#+AUTHOR: Ziad Ahmed
+#+DATE: Oct 26 2026
+#+STARTUP: overview
+
+* LIMIT
+- returns only N top rows
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT "title" FROM "longlist" LIMIT 5;
+#+end_src
+
+#+RESULTS:
+| title                                 |
+|---------------------------------------|
+| Boulder                               |
+| Whale                                 |
+| The Gospel According to the New World |
+| Standing Heavy                        |
+| Time Shelter                          |
+
+* WHERE
+# =, !=, <>
+# AND, OR, ()
+- puts filter on rows
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT "title", "author" FROM "longlist" WHERE "year" = 2023 LIMIT 5;
+#+end_src
+
+#+RESULTS:
+| title                                 | author            |
+|---------------------------------------+-------------------|
+| Boulder                               | Eva Baltasar      |
+| Whale                                 | Cheon Myeong-Kwan |
+| The Gospel According to the New World | Maryse Condé      |
+| Standing Heavy                        | Gauz              |
+| Time Shelter                          | Georgi Gospodinov |
+
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT "title", "format" FROM "longlist" WHERE "format" != 'hardcover' LIMIT 5;
+#+end_src
+
+#+RESULTS:
+| title                                 | format    |
+|---------------------------------------+-----------|
+| Boulder                               | paperback |
+| Whale                                 | paperback |
+| The Gospel According to the New World | paperback |
+| Standing Heavy                        | paperback |
+| Is Mother Dead                        | paperback |
+
+- NOT
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT "title", "format" FROM "longlist" WHERE NOT "format" = 'hardcover' LIMIT 5;
+#+end_src
+
+#+RESULTS:
+| title                                 | format    |
+|---------------------------------------+-----------|
+| Boulder                               | paperback |
+| Whale                                 | paperback |
+| The Gospel According to the New World | paperback |
+| Standing Heavy                        | paperback |
+| Is Mother Dead                        | paperback |
+
+- AND
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT "title", "format" FROM "longlist" WHERE "format" = 'hardcover' AND "year" = 2023;
+#+end_src
+
+#+RESULTS:
+| title                     | format    |
+|---------------------------+-----------|
+| Time Shelter              | hardcover |
+| Jimi Hendrix Live in Lviv | hardcover |
+
+- OR
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT "title", "format" FROM "longlist" WHERE ("format" = 'hardcover' OR "year" = 2023) LIMIT 5;;
+#+end_src
+
+#+RESULTS:
+| title                                 | format    |
+|---------------------------------------+-----------|
+| Boulder                               | paperback |
+| Whale                                 | paperback |
+| The Gospel According to the New World | paperback |
+| Standing Heavy                        | paperback |
+| Time Shelter                          | hardcover |
+
+* NULL: IS NULL - IS NOT NULL
+
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT "title", "translator"
+FROM "longlist"
+WHERE "translator" IS NULL;
+#+end_src
+
+#+RESULTS:
+| title                                   | translator |
+|-----------------------------------------+------------|
+| The Perfect Nine                        |            |
+| The Enlightenment of The Greengage Tree |            |
+
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT "title", "translator"
+FROM "longlist"
+WHERE "translator" IS NOT NULL
+LIMIT 5;
+#+end_src
+
+#+RESULTS:
+| title                                 | translator                 |
+|---------------------------------------+----------------------------|
+| Boulder                               | Nicole d'Amonville Alegría |
+| Whale                                 | Jae Won Chung              |
+| The Gospel According to the New World | Richard Philcox            |
+| Standing Heavy                        | Frank Wynne                |
+| Time Shelter                          | Angela Rodel               |
+
+* LIKE: string matching
+# 'string' -> match string literally
+# '%'      -> match any string
+# '_'      -> match single character
+
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT "title" FROM "longlist"
+WHERE "title" LIKE '%love%';  -- matchs ' `any string` love `any string` '
+#+end_src
+
+#+RESULTS:
+| title                      |
+|----------------------------|
+| Love in the Big City       |
+| More Than I Love My Life   |
+| Love in the New Millennium |
+| Die, My Love               |
+
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT "title" FROM "longlist"
+WHERE "title" LIKE 'The %'  -- matchs ' `The `any string` '
+LIMIT 5;
+#+end_src
+
+#+RESULTS:
+| title                                 |
+|---------------------------------------|
+| The Gospel According to the New World |
+| The Birthday Party                    |
+| The Book of Mother                    |
+| The Books of Jacob                    |
+| The War of the Poor                   |
+
+- الـ ='_'= بتشتغل كا wildcard بس لحرف واحد فقط.
+- عادتا بتستخدم لتعويض حرف احنا ناسينه
+  - او اننا نعمل match لكلمات متشابه زي:
+    - ='c_t= -> 'cat, 'cut, 'cot
+
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT "title" FROM "longlist"
+WHERE "title" LIKE 'p_re'
+LIMIT 5;
+#+end_src
+
+#+RESULTS:
+| title |
+|-------|
+| Pyre  |
+
+* BETWEEN
+# >= AND <=
+
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT "title", "rating" FROM "longlist"
+WHERE "rating" >= 4.0 AND "rating" <= 4.1
+LIMIT 5;
+#+end_src
+
+#+RESULTS:
+| title                    | rating |
+|--------------------------+--------|
+| Time Shelter             |   4.05 |
+| While We Were Dreaming   |    4.0 |
+| Pyre                     |   4.04 |
+| Elena Knows              |    4.1 |
+| More Than I Love My Life |   4.05 |
+
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT "title", "rating" FROM "longlist"
+WHERE "rating" BETWEEN 4.0 AND 4.1 -- inclusive (>= <=)
+LIMIT 5;
+#+end_src
+
+#+RESULTS:
+| title                    | rating |
+|--------------------------+--------|
+| Time Shelter             |   4.05 |
+| While We Were Dreaming   |    4.0 |
+| Pyre                     |   4.04 |
+| Elena Knows              |    4.1 |
+| More Than I Love My Life |   4.05 |
+
+* Case Sensitive (=) vs Case Insensitive (LIKE)
+
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT "title" FROM "longlist"
+WHERE "title" = 'pyre'; -- case sensitive
+#+end_src
+
+#+RESULTS:
+| title |
+|---------|
+ # No results....
+
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT "title" FROM "longlist"
+WHERE "title" LIKE 'pyre'; -- case insensitive
+#+end_src
+
+#+RESULTS:
+| title |
+|---------|
+| Pyre  |
+
+* ORDER BY
+
+# ASC -> Default
+
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT "title", "rating", "votes" FROM "longlist"
+ORDER BY "rating" DESC
+LIMIT 10;
+#+end_src
+
+#+RESULTS:
+| title                                 | rating | votes |
+|---------------------------------------+--------+-------|
+| The Eighth Life                       |   4.52 | 16350 |
+| A New Name: Septology VI-VII          |    4.5 |   479 |
+| The Other Name: Septology I-II        |   4.19 |  1245 |
+| The Years                             |   4.18 | 16888 |
+| Still Born                            |   4.14 |  7647 |
+| When We Cease to Understand the World |   4.14 | 23251 |
+| Elena Knows                           |    4.1 |  8212 |
+| The Flying Mountain                   |    4.1 |   323 |
+| Hurricane Season                      |   4.08 | 22551 |
+| The Books of Jacob                    |   4.06 |  5664 |
+
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT "title", "rating", "votes" FROM "longlist"
+ORDER BY "rating" DESC, "votes" DESC
+LIMIT 8;
+#+end_src
+
+#+RESULTS:
+| title                                 | rating | votes |
+|---------------------------------------+--------+-------|
+| The Eighth Life                       |   4.52 | 16350 |
+| A New Name: Septology VI-VII          |    4.5 |   479 |
+| The Other Name: Septology I-II        |   4.19 |  1245 |
+| The Years                             |   4.18 | 16888 |
+| When We Cease to Understand the World |   4.14 | 23251 |
+| Still Born                            |   4.14 |  7647 |
+| Elena Knows                           |    4.1 |  8212 |
+| The Flying Mountain                   |    4.1 |   323 |
+
+* Aggregation Functions, ROUND, AS
+** COUNT, AVG, SUM, MIN, MAX
+
+- الـAggregate functions هي دوال بتجمع فيم كل الصفوف وترجع فيمة واحدة في الاخر
+- الـScalar functions هي دوال بتاخد قيمة واحدة وتعمل عليها عملية حسابية.
+- الـAS keyword بتعمل alias لاسماء الـcolumns والـtables.
+
+- AVG
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT AVG("rating") FROM "longlist";
+#+end_src
+
+#+RESULTS:
+|      AVG("rating") |
+|--------------------|
+| 3.7537179487179491 |
+
+- AVG, rounded - ROUND (scalar function)
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT ROUND(AVG("rating"), 2) FROM "longlist";
+#+end_src
+
+#+RESULTS:
+| ROUND(AVG("rating"), 2) |
+|-------------------------|
+|                    3.75 |
+
+- AS
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT ROUND(AVG("rating"), 2) AS "Average Rating" FROM "longlist";
+#+end_src
+
+#+RESULTS:
+| Average Rating |
+|----------------|
+|            3.7 |
+
+- MIN
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT MIN("rating") AS "Minimun Rating" FROM "longlist";
+#+end_src
+
+#+RESULTS:
+| Minimun Rating |
+|------------------|
+| 3.05           |
+
+- MIN
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT MAX("rating") AS "Minimun Rating" FROM "longlist";
+#+end_src
+
+#+RESULTS:
+| Minimun Rating |
+|------------------|
+| 4.52           |
+
+
+- الـMAX/MIN مع الـstrings بيجيبوا اول string في الـalphabet, واخر string في الـalphabet
+
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT MIN("title"), MAX("title") FROM "longlist";
+#+end_src
+
+#+RESULTS:
+| MIN("title")                          | MAX("title")          |
+|---------------------------------------+-----------------------|
+| A New Name: Septology VI-VII (اول صف) | Wretchedness (اخر صف) |
+
+- SUM
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT SUM("votes") FROM "longlist";
+#+end_src
+
+#+RESULTS:
+| SUM("votes") |
+|--------------|
+|       604173 |
+
+** Aggregation functions with NULL
+
+MIN, MAX, SUM, AVG, COUNT("column name")
+
+- بيتجاهلو الـNULL values
+
+COUNT(*)
+
+- بتعد جميع الصفوف حتي اللي فيها NULL values لانها بتتعامل مع الصف ككل مش ملهاش دعوة بقيمة عمود معين.
+
+- COUNT - COUNT(*) = every row
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT COUNT(*) AS "Total number of books" FROM "longlist";
+#+end_src
+
+#+RESULTS:
+| Total number of books |
+|-----------------------|
+|                    78 |
+
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT COUNT("translator") AS "Total number of translator" FROM "longlist";
+#+end_src
+
+#+RESULTS:
+| Total number of translator |
+|----------------------------|
+|                         76 |
+
+** DISTINCT
+
+- الـDISTINCT بتخلي الـAggregation functions تتجاهل التكرارات.
+
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT COUNT("publisher") FROM "longlist";
+#+end_src
+
+#+RESULTS:
+| COUNT("publisher") |
+|--------------------|
+|                 78 |
+
+#+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
+SELECT COUNT(DISTINCT "publisher") AS "Distinct publishers" FROM "longlist";
+#+end_src
+
+#+RESULTS:
+| Distinct publishers |
+|---------------------|
+|                  33 |

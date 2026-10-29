@@ -1,0 +1,1 @@
+SELECT "topic" FROM episodes WHERE "air_date" BETWEEN '2002-07-23' AND '2012-01-01' LIMIT 5;

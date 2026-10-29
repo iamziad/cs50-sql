@@ -1,0 +1,223 @@
+#+TITLE: Solutions for CS50 SQL weak0
+#+AUTHOR: Ziad Ahmed
+#+DATE: Oct 29 2026
+#+STARTUP: overview inlineimages
+
+* 1
+#+begin_src sqlite :db "./cyberchase.db" :colnames yes :tangle "./1.sql"
+SELECT "title" FROM episodes WHERE "season" = 1;
+#+end_src
+
+#+RESULTS:
+| title                               |
+|---------------------------------------|
+| Lost My Marbles                     |
+| Castleblanca                        |
+| R-Fair City                         |
+| Snow Day to be Exact                |
+| Sensible Flats                      |
+| Zeus on the Loose                   |
+| The Poddleville Case                |
+| And They Counted Happily Ever After |
+| Clock Like An Egyptian              |
+| Secrets of Symmetria                |
+| A Day at the Spa                    |
+| Of All The Luck                     |
+| Eureeka                             |
+| Cool It                             |
+| Find Those Gleamers                 |
+| Codename: Icky                      |
+| Return to Sensible Flats            |
+| Problem Solving in Shangri-La       |
+| Send in the Clones                  |
+| Trading Places                      |
+| Less Than Zero                      |
+| Model Behavior                      |
+| Fortress of Attitude                |
+| Size Me Up                          |
+| A Battle of Equals                  |
+| Out of Sync                         |
+
+* 2
+#+begin_src sqlite :db "./cyberchase.db" :colnames yes :tangle "./2.sql"
+SELECT "season", "title" FROM episodes WHERE "episode_in_season" = 1;
+#+end_src
+
+#+RESULTS:
+| season | title                              |
+|--------+--------------------------------------|
+|      1 | Lost My Marbles                    |
+|      2 | Hugs & Witches                     |
+|      3 | EcoHaven CSE                       |
+|      4 | Balancing Act                      |
+|      5 | The Halloween Howl                 |
+|      6 | Digit's B-Day Surprise             |
+|      7 | Weather Watchers Gone With The Fog |
+|      8 | The Hacker's Challenge             |
+|      9 | An Urchin Matter                   |
+|     10 | Fit to be Heroes                   |
+|     11 | Watts of Halloween Trouble         |
+|     12 | Space Waste Odyssey                |
+|     13 | Duck Stop                          |
+|     14 | Clean-Up on Isle 8                 |
+
+* 3
+#+begin_src sqlite :db "./cyberchase.db" :colnames yes :tangle "./3.sql"
+SELECT "production_code" FROM episodes WHERE "title" = 'Hackerized!';
+#+end_src
+
+#+RESULTS:
+| production_code |
+|------------------|
+| CYB091         |
+
+* 4
+#+begin_src sqlite :db "./cyberchase.db" :colnames yes :tangle "./4.sql"
+SELECT "title" from episodes WHERE "topic" IS NULL;
+#+end_src
+
+#+RESULTS:
+| title                            |
+|------------------------------------|
+| Space Waste Odyssey              |
+| Space Waste Odyssey              |
+| Giving Thanks Day                |
+| A Garden Grows in Botlyn         |
+| Missing Bats in Sensible Flats   |
+| Water Woes                       |
+| Soil Turmoil                     |
+| Hacker Hugs a Tree               |
+| Pursuit of the Prism of Power    |
+| Composting in the Clutch         |
+| A Camping Conundrum              |
+| Journey of a Thousand Food Miles |
+| Duck Stop                        |
+| The Great Outdoors               |
+| Coral Grief                      |
+| Sustainable by Design            |
+| Hacker's Bright Idea             |
+| Buzz and the Tree                |
+| The Lilting Loons                |
+| Living in Disharmony             |
+| Traffic Trouble                  |
+| A Garden is Born                 |
+| Clean-Up on Isle 8               |
+| Weather or Not                   |
+| Weather or Not                   |
+| Trees, Please                    |
+| Trees, Please                    |
+| Trees, Please                    |
+
+* 5
+#+begin_src sqlite :db "./cyberchase.db" :colnames yes :tangle "./5.sql"
+SELECT "title" from episodes WHERE "air_date" = '2004-12-31';
+#+end_src
+
+#+RESULTS:
+| title           |
+|-------------------|
+| Starlight Night |
+
+* 6
+#+begin_src sqlite :db "./cyberchase.db" :colnames yes :tangle "./6.sql"
+SELECT "title" from episodes WHERE "season" = 6 AND "air_date" < '2008-01-01'
+#+end_src
+
+#+RESULTS:
+| title                  |
+|--------------------------|
+| Digit's B-Day Surprise |
+| When Penguins Fly      |
+
+* 7
+#+begin_src sqlite :db "./cyberchase.db" :colnames yes :tangle "./7.sql"
+SELECT "title", "topic" from episodes WHERE "topic" LIKE '%Fractions%';
+#+end_src
+
+#+RESULTS:
+| title                                 | topic                                      |
+|---------------------------------------+----------------------------------------------|
+| Zeus on the Loose                     | Fractions                                  |
+| Harriet Hippo & the Mean Green        | Equivalent Fractions                       |
+| Shari Spotter and the Cosmic Crumpets | Mixed-Number Fractions                     |
+| A Fraction of a Chance                | Fractions 101                              |
+| Peace, Love, and Hackerness           | Measuring with Mixed Number Fractions      |
+| Trash Creep                           | Fractions, Effects of Trash, and Recycling |
+
+* 8
+#+begin_src sqlite :db "./cyberchase.db" :colnames yes :tangle "./8.sql"
+SELECT COUNT(*) AS 'Number of episodes in the last 6 years' FROM episodes WHERE "air_date" BETWEEN '2018-01-01' AND '2024-01-01'
+#+end_src
+
+#+RESULTS:
+| Number of episodes in the last 6 years |
+|------------------------------------------|
+| 31                                     |
+
+* 9
+#+begin_src sqlite :db "./cyberchase.db" :colnames yes :tangle "./9.sql"
+SELECT COUNT(*) AS 'Number of episodes in the first 6 years' FROM episodes WHERE "air_date" BETWEEN '2002-01-01' AND '2008-01-01'
+#+end_src
+
+#+RESULTS:
+| Number of episodes in the first 6 years |
+|-------------------------------------------|
+| 74                                      |
+
+* 10
+#+begin_src sqlite :db "./cyberchase.db" :colnames yes :tangle "./10.sql"
+SELECT "id", "title", "production_code" FROM episodes ORDER BY "production_code";
+#+end_src
+
+#+RESULTS:
+|  id | title                                  | production_code |
+|-----+----------------------------------------+------------------|
+|   1 | Lost My Marbles                        | CYB001         |
+|   6 | Zeus on the Loose                      | CYB002         |
+|   8 | And They Counted Happily Ever After    | CYB003         |
+|   3 | R-Fair City                            | CYB004         |
+|   5 | Sensible Flats                         | CYB005         |
+|   7 | The Poddleville Case                   | CYB006         |
+
+* 11
+#+begin_src sqlite :db "./cyberchase.db" :colnames yes :tangle "./11.sql"
+SELECT "title" FROM episodes WHERE "season" = 5 ORDER BY "title" DESC;
+#+end_src
+
+#+RESULTS:
+| title                  |
+|--------------------------|
+| The Halloween Howl     |
+| The Flying Parallinis  |
+| The Fairy Borg Father  |
+| On the Line            |
+| Inside Hacker          |
+| EcoHaven Ooze          |
+| Designing Mr. Perfect  |
+| Crystal Clear          |
+| A Fraction of a Chance |
+| A Clean Sweep          |
+
+* 12
+#+begin_src sqlite :db "./cyberchase.db" :colnames yes :tangle "./12.sql"
+SELECT COUNT(DISTINCT "title") FROM episodes;
+#+end_src
+
+#+RESULTS:
+| COUNT(DISTINCT "title") |
+|---------------------------|
+| 136                     |
+
+* 13
+#+begin_src sqlite :db "./cyberchase.db" :colnames yes :tangle "./13.sql"
+SELECT "topic" FROM episodes WHERE "air_date" BETWEEN '2002-07-23' AND '2012-01-01' LIMIT 5;
+#+end_src
+
+#+RESULTS:
+| topic                       |
+|-------------------------------|
+| Scale and Size              |
+| Balancing Equations         |
+| Patterns in Music           |
+| Median of Data (Average)    |
+| Perimeter/Area Relationship |
