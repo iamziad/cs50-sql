@@ -1,0 +1,119 @@
+#+TITLE: Solutions for CS50 SQL weak-0, 36 views
+#+AUTHOR: Ziad Ahmed
+#+DATE: Oct 29 2026
+#+STARTUP: overview inlineimages
+
+* 1
+#+begin_src sqlite :db "./views.db" :colnames yes :tangle "./1.sql"
+SELECT "japanese_title", "english_title" FROM views;
+#+end_src
+
+#+RESULTS:
+| japanese_title | english_title                    |
+|---------------+-----------------------------------|
+| 神奈川沖浪裏    | The Great Wave off Kanagawa     |
+| 凱風快晴        | Fine Wind, Clear Morning        |
+| 山下白雨        | Thunderstorm Beneath the Summit |
+| 深川万年橋下    | Under Mannen Bridge at Fukagawa |
+| 東都駿台        | Sundai, Edo                     |
+
+* 2
+#+begin_src sqlite :db "./views.db" :colnames yes :tangle "./2.sql"
+SELECT "average_color" FROM views WHERE "artist" = 'Hokusai' AND "english_title" LIKE '%river%';
+#+end_src
+
+#+RESULTS:
+| average_color |
+|----------------|
+| #8ba1a5      |
+| #a6a799      |
+| #8c897e      |
+| #91897d      |
+
+* 3
+#+begin_src sqlite :db "./views.db" :colnames yes :tangle "./3.sql"
+SELECT COUNT(*) AS 'Fuji occurances in title' FROM views WHERE "english_title" LIKE '%Fuji%';
+#+end_src
+
+#+RESULTS:
+| Fuji occurances in title |
+|----------------------------|
+| 6                        |
+
+* 4
+#+begin_src sqlite :db "./views.db" :colnames yes :tangle "./4.sql"
+SELECT COUNT(*) AS 'Eastern Capital occurances in title' FROM views WHERE "artist" = 'Hiroshige' AND "english_title" LIKE '%Eastern Capital%';
+#+end_src
+
+#+RESULTS:
+| Eastern Capital occurances in title |
+|---------------------------------------|
+| 10                                  |
+
+* 5
+#+begin_src sqlite :db "./views.db" :colnames yes :tangle "./5.sql"
+SELECT MAX("contrast") AS 'Maximum Contrast' FROM views;
+#+end_src
+
+#+RESULTS:
+| Maximum Contrast |
+|--------------------|
+| 0.65             |
+
+* 6
+#+begin_src sqlite :db "./views.db" :colnames yes :tangle "./6.sql"
+SELECT ROUND(AVG("entropy"), 2) FROM views WHERE "artist" = 'Hiroshige';
+#+end_src
+
+#+RESULTS:
+| ROUND(AVG("entropy"), 2) |
+|----------------------------|
+| 7.42                     |
+
+* 7
+#+begin_src sqlite :db "./views.db" :colnames yes :tangle "./7.sql"
+SELECT "english_title" FROM views WHERE "artist" = 'Hiroshige' ORDER BY "brightness" DESC LIMIT 5;
+#+end_src
+
+#+RESULTS:
+| english_title                                       |
+|------------------------------------------------------|
+| The Sea off the Miura Peninsula in Sagami Province |
+| Futami Bay in Ise Province                         |
+| The Sumida Embankment in the Eastern Capital       |
+| Sukiyagashi in the Eastern Capital                 |
+| Cherry Blossoms at Honmoku in Musashi Province     |
+
+* 8
+#+begin_src sqlite :db "./views.db" :colnames yes :tangle "./8.sql"
+SELECT "english_title" FROM views WHERE "artist" = 'Hokusai' ORDER BY "contrast" LIMIT 5;
+#+end_src
+
+#+RESULTS:
+| english_title                                                                     |
+|------------------------------------------------------------------------------------|
+| Mount Fuji reflects in Lake Kawaguchi, seen from the Misaka Pass in Kai Province |
+| Kajikazawa in Kai Province                                                       |
+| Shimomeguro                                                                      |
+| Bay of Noboto                                                                    |
+| Ushibori in Hitachi Province                                                     |
+
+* 9
+#+begin_src sqlite :db "./views.db" :colnames yes :tangle "./9.sql"
+SELECT "english_title", "artist" FROM views WHERE "brightness" = (SELECT MAX("brightness") FROM views);
+#+end_src
+
+#+RESULTS:
+| english_title                          | artist  |
+|---------------------------------------+-----------|
+| A View of Mount Fuji Across Lake Suwa | Hokusai |
+
+* 10
+#+begin_src sqlite :db "./views.db" :colnames yes :tangle "./10.sql"
+SELECT "english_title", "artist" FROM views ORDER BY "brightness" DESC LIMIT 1;
+#+end_src
+
+#+RESULTS:
+| english_title                          | artist  |
+|---------------------------------------+-----------|
+| A View of Mount Fuji Across Lake Suwa | Hokusai |
