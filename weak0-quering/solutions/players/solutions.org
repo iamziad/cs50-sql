@@ -1,0 +1,129 @@
+#+TITLE: Solutions for CS50 SQL weak-0, players
+#+AUTHOR: Ziad Ahmed
+#+DATE: Oct 29 2026
+#+STARTUP: overview inlineimages
+
+* 1
+#+begin_src sqlite :db "./players.db" :colnames yes :tangle "1.sql"
+SELECT "birth_city", "birth_state", "birth_country" FROM players WHERE "first_name" = 'Jackie' AND "last_name" = 'Robinson';
+#+end_src
+
+#+RESULTS:
+| birth_city | birth_state | birth_country |
+|-----------+------------+----------------|
+| Cairo     | GA         | USA          |
+
+* 2
+#+begin_src sqlite :db "./players.db" :colnames yes :tangle "2.sql"
+SELECT "bats" FROM players WHERE "first_name" = 'Babe' AND "last_name" = 'Ruth';
+#+end_src
+
+#+RESULTS:
+| bats |
+|--------|
+| L    |
+
+* 3
+#+begin_src sqlite :db "./players.db" :colnames yes :tangle "3.sql"
+SELECT "id" FROM players WHERE "debut" IS NULL;
+#+end_src
+
+#+RESULTS:
+| id    |
+|---------|
+| 20557 |
+| 20558 |
+| 20559 |
+| 20560 |
+| 20561 |
+
+* 4
+#+begin_src sqlite :db "./players.db" :colnames yes :tangle "4.sql"
+SELECT "first_name", "last_name" FROM players WHERE "birth_country" != 'USA'
+ORDER BY "first_name", "last_name";
+#+end_src
+
+#+RESULTS:
+| first_name | last_name   |
+|-----------+--------------|
+| A. J.     | Jimenez    |
+| Aaron     | Altherr    |
+| Aaron     | Guiel      |
+| Aaron     | Myette     |
+| Aaron     | Whitefield |
+
+* 5
+#+begin_src sqlite :db "./players.db" :colnames yes :tangle "5.sql"
+SELECT "first_name", "last_name" FROM players WHERE "bats" = 'R' ORDER BY "first_name", "last_name";
+#+end_src
+
+#+RESULTS:
+| first_name | last_name |
+|-----------+------------|
+| A. J.     | Achter   |
+| A. J.     | Alexy    |
+| A. J.     | Burnett  |
+| A. J.     | Cole     |
+| A. J.     | Ellis    |
+
+* 6
+#+begin_src sqlite :db "./players.db" :colnames yes :tangle "6.sql"
+SELECT "first_name","last_name", "debut" FROM players WHERE "birth_city" = 'Pittsburgh' AND "birth_state" = 'PA' ORDER BY "debut" DESC, "first_name", "last_name";
+#+end_src
+
+#+RESULTS:
+| first_name | last_name     | debut      |
+|-----------+--------------+--------------|
+| Denny     | McKnight     |            |
+| Stan      | Robison      |            |
+| Al        | Pratt        | 1871-05-04 |
+| Chappy    | Lane         | 1882-05-16 |
+| Jake      | Seymour      | 1882-09-23 |
+
+* 7
+#+begin_src sqlite :db "./players.db" :colnames yes :tangle "7.sql"
+SELECT COUNT(*) FROM players WHERE ("bats" = 'R' AND "throws" = 'L') OR ("bats" = 'L' AND "throws" = 'R');
+#+end_src
+
+#+RESULTS:
+| COUNT(*) |
+|------------|
+| 2925     |
+
+* 8
+#+begin_src sqlite :db "./players.db" :colnames yes :tangle "8.sql"
+SELECT ROUND(AVG("height"), 2) AS 'Average Height', ROUND(AVG("weight"), 2) FROM players WHERE "debut" >= '2000-01-01';
+#+end_src
+
+#+RESULTS:
+| ROUND(AVG("height"), 2) | ROUND(AVG("weight"), 2) |
+|-------------------------+---------------------------|
+|                   73.66 | 208.58                  |
+
+* 9
+#+begin_src sqlite :db "./players.db" :colnames yes :tangle "9.sql"
+SELECT "first_name", "last_name" FROM players WHERE "final_game" BETWEEN '2022-01-01' AND '2023-12-31' ORDER BY "first_name", "last_name";
+#+end_src
+
+#+RESULTS:
+| first_name | last_name |
+|-----------+------------|
+| A. J.     | Alexy    |
+| A. J.     | Ladwig   |
+| A. J.     | Minter   |
+| A. J.     | Puk      |
+| AJ        | Pollock  |
+
+* 10
+#+begin_src sqlite :db "./players.db" :colnames yes :tangle "10.sql"
+SELECT
+  COUNT(CASE WHEN   "birth_country" = 'USA' THEN 1 END) AS 'Players born in USA',
+  COUNT(CASE WHEN   "birth_country" != 'USA' THEN 1 END) AS 'Players born outside USA',
+    COUNT(CASE WHEN "birth_country" IS NULL THEN 1 END) AS 'Players with unknown birth country'
+FROM players;
+#+end_src
+
+#+RESULTS:
+| Players born in USA | Players born outside USA | Players with unknown birth country |
+|---------------------+--------------------------+--------------------------------------|
+|               17896 |                     2814 | 59                                 |

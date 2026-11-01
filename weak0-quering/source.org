@@ -266,7 +266,7 @@ LIMIT 8;
 * Aggregation Functions, ROUND, AS
 ** COUNT, AVG, SUM, MIN, MAX
 
-- الـAggregate functions هي دوال بتجمع فيم كل الصفوف وترجع فيمة واحدة في الاخر
+- الـAggregate functions هي دوال بتجمع قيم كل الصفوف وترجع قيمة واحدة في الاخر
 - الـScalar functions هي دوال بتاخد قيمة واحدة وتعمل عليها عملية حسابية.
 - الـAS keyword بتعمل alias لاسماء الـcolumns والـtables.
 
@@ -328,9 +328,9 @@ SELECT MIN("title"), MAX("title") FROM "longlist";
 #+end_src
 
 #+RESULTS:
-| MIN("title")                          | MAX("title")          |
-|---------------------------------------+-----------------------|
-| A New Name: Septology VI-VII (اول صف) | Wretchedness (اخر صف) |
+| MIN("title")                 | MAX("title") |
+|------------------------------+----------------|
+| A New Name: Septology VI-VII | Wretchedness |
 
 - SUM
 #+begin_src sqlite :db "~/Projects/cs50-sql/longlist.db" :colnames yes
